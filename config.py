@@ -1,3 +1,6 @@
+# local 용이니까 ㅇㅇ
+# 앵간하면 .gitignore에 추가하길
+
 db = {
     'user': 'test',
     'password': 'test1234',
