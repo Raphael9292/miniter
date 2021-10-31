@@ -1,3 +1,4 @@
+import os
 import jwt
 import bcrypt
 
@@ -10,9 +11,10 @@ Business Layer: 실제 시스템이 구현해야 하는 로직
 
 
 class UserService:
-    def __init__(self, user_dao, config):
+    def __init__(self, user_dao, config, s3_client):
         self.user_dao = user_dao
         self.config = config
+        self.s3 = s3_client
 
     def create_new_user(self, new_user):
         new_user['password'] = bcrypt.hashpw(
@@ -39,7 +41,7 @@ class UserService:
             'user_id': user_id,
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, self.config.JWT_SECRET_KEY, 'HS256')
+        token = jwt.encode(payload, self.config['JWT_SECRET_KEY'], 'HS256')
 
         return token.decode('UTF-8')
 
@@ -51,3 +53,17 @@ class UserService:
 
     def get_user_id_and_password(self, email):
         return self.user_dao.get_user_id_and_password(email)
+
+    def save_profile_picture(self, picture, filename, user_id):
+        self.s3.upload_fileobj(
+            picture,
+            self.config['S3_BUCKET'],
+            filename
+        )
+
+        image_url = f"{self.config['S3_BUCKET_URL']}{filename}"
+
+        return self.user_dao.save_profile_picture(image_url, user_id)
+
+    def get_profile_picture(self, user_id):
+        return self.user_dao.get_profile_picture(user_id)
