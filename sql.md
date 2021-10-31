@@ -39,6 +39,12 @@ create table tweets(
 
 show tables;
 
-explain users;
-explain users_follow_list;
-explain tweets;
+explain users;  
+explain users_follow_list;  
+explain tweets;  
+
+
+### profile_picture_add_column.sql
+```sql
+ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255);
+```
