@@ -1,6 +1,6 @@
 import bcrypt
 import pytest
-import config
+from .. import config
 
 from ..model import UserDao, TweetDao
 from sqlalchemy import create_engine, text

@@ -1,6 +1,4 @@
-import config
 import boto3
-import botocore
 
 from flask import Flask
 from sqlalchemy import create_engine

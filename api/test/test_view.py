@@ -2,7 +2,7 @@ import io
 import pytest
 import bcrypt
 import json
-import config
+from .. import config
 
 from ..app import create_app
 from sqlalchemy import create_engine, text

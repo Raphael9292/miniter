@@ -1,7 +1,7 @@
 import jwt
 import bcrypt
 import pytest
-import config
+from .. import config
 
 from ..model import UserDao, TweetDao
 from ..services import UserService, TweetService
