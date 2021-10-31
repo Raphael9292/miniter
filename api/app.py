@@ -1,4 +1,6 @@
 import config
+import boto3
+import botocore
 
 from flask import Flask
 from sqlalchemy import create_engine
@@ -18,9 +20,9 @@ class Services:
 """
 
 
-################################
-# Create App
-################################
+####################
+# Create Flask App
+####################
 def create_app(test_config=None):
     app = Flask(__name__)
 
@@ -38,11 +40,17 @@ def create_app(test_config=None):
     tweet_dao = TweetDao(database)
 
     # Business Layer
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=app.config['S3_ACCESS_KEY'],
+        aws_secret_access_key=app.config['S3_SECRET_KEY']
+    )
+
     services = Services
-    services.user_service = UserService(user_dao, config)
+    services.user_service = UserService(user_dao, app.config, s3_client)
     services.tweet_service = TweetService(tweet_dao)
 
-    # 엔드포인트들을 생성
+    # 엔드포인트 생성
     create_endpoints(app, services)
 
     return app
