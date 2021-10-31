@@ -141,7 +141,7 @@ def test_get_user_id_and_password(user_dao):
 
 def test_insert_follow(user_dao):
     # insert_follow 메소드를 사용하여 유저 1이 유저 2를 팔로우 하도록 한다.
-    # 유저 1과 2는 setup_function 에서 이미 생성 되었다.
+    # 유저 1과 2는 setup_function에서 이미 생성 되었다.
     user_dao.insert_follow(user_id=1, follow_id=2)
 
     follow_list = get_follow_list(1)
@@ -151,7 +151,7 @@ def test_insert_follow(user_dao):
 
 def test_insert_unfollow(user_dao):
     # insert_follow 메소드를 사용하여 유저 1이 유저 2를 팔로우 한 후 언팔로우 한다.
-    # 유저 1과 2는 setup_function 에서 이미 생성 되었다.
+    # 유저 1과 2는 setup_function에서 이미 생성 되었다.
     user_dao.insert_follow(user_id=1, follow_id=2)
     user_dao.insert_unfollow(user_id=1, unfollow_id=2)
 
@@ -193,3 +193,19 @@ def test_timeline(user_dao, tweet_dao):
             'tweet': 'tweet test 2'
         }
     ]
+
+
+def test_save_and_get_profile_picture(user_dao):
+    # 먼저 Profile_picture를 읽어들이도록 하자.
+    # 저장한 Profile_picture 가 없음으로 None
+    user_id = 1
+    user_profile_picture = user_dao.get_profile_picture(user_id)
+    assert user_profile_picture is None
+
+    # Profile_picture url을 저장하자
+    expected_profile_picture = "https://s3.ap-northeast-2.amazonaws.com/test/profile.jpg"
+    user_dao.save_profile_picture(expected_profile_picture, user_id)
+
+    # Profile_picture url을 읽어들이자
+    actual_profile_picture = user_dao.get_profile_picture(user_id)
+    assert expected_profile_picture == actual_profile_picture
